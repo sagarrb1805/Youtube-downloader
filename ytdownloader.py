@@ -1,5 +1,6 @@
 from tkinter import *
 import pytube
+import tkinter.messagebox
 
 root = Tk()
 root.geometry("500x500")
@@ -11,12 +12,20 @@ def download():
     url = youtube_link.get()
     try:
         youtube = pytube.YouTube(url)
-        video = youtube.streams.first()
-        video.download()
-    except:
-        error_msg = Label(root, text="invalid link", width=20, font=("arial", 10, "bold"))
-        error_msg.place(x=150, y=30)
+        try:
+            video = youtube.streams.first()
+            video.download()
+            success = Label(root, text="Video downloaded successfully!!", font=("arial", 10, "bold"))
+            success.place(x=150, y=30)
+        except:
+            error_message = Label(root, text="something went wrong", width=20, font=("arial", 10, "bold"))
+            error_message.place(x=150, y=30)
+            tkinter.messagebox.showerror("Sorry !!", "Action cannot be performed at this moment")
 
+    except:
+        invalid_link_label = Label(root, text="invalid link", width=20, font=("arial", 10, "bold"))
+        invalid_link_label.place(x=150, y=30)
+        tkinter.messagebox.showerror("Sorry !!", "The link seems to be invalid")
 
 
 youtube_link = StringVar()
